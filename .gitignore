@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Temporary scripts and analysis junk
+tmp_*.py
+temp_*.py
+
+# Visual Studio Code settings
+.vscode/
+
+# Jupyter and notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment folders
+.venv/
+.env/
+
+# Local data outputs
+*.csv
+*.svg
