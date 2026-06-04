@@ -31,7 +31,7 @@
   <circle cx="638.49" cy="458.49" r="35" fill="none"
           stroke="#ef4444" stroke-width="4" />
   <text x="638.49" y="416.49" text-anchor="middle"
-        class="small">entrada: 0</text>
+        class="small">entrada: 09</text>
 
   
             <g>
@@ -134,9 +134,9 @@
   <g class="branch-tree">
     <text x="640" y="628" class="small">Presente</text>
 <text x="652" y="648" class="small">│</text>
-<text x="648" y="668" class="small">├── Rama 011 (27.83%)</text>
-<text x="648" y="690" class="small">├── Rama 111 (27.15%)</text>
-<text x="648" y="712" class="small">├── Rama 001 (18.55%)</text>
-<text x="648" y="734" class="small">└── Rama 101 (16.99%)</text>
+<text x="648" y="668" class="small">├── Rama 011 (22.66%)</text>
+<text x="648" y="690" class="small">├── Rama 111 (21.29%)</text>
+<text x="648" y="712" class="small">├── Rama 100 (18.75%)</text>
+<text x="648" y="734" class="small">└── Rama 000 (18.07%)</text>
   </g>
 </svg>

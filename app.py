@@ -333,38 +333,30 @@ def run_simulation(agent: ExternalAgent, current_time: int, future_jump: int) ->
 def simulation_to_csv(result: SimulationResult) -> str:
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow([
-        "Nombre agente",
-        "Tiempo base",
-        "Salto base",
-        "Tiempo efectivo",
-        "Salto efectivo",
-        "Periodo detectado (QFT)",
-        "Frecuencia dominante",
-        "Interpretación temporal",
-        "Área horizonte",
-        "Entropía horizonte",
-        "Qiskit usado",
-        "Top ramas futuras",
-    ])
-    branches_text = ", ".join(
-        f"{branch['event']} ({branch['probability']:.2%})"
-        for branch in result.future_branches
-    )
-    writer.writerow([
-        result.agent.name,
-        result.current_time,
-        result.future_jump,
-        result.effective_time,
-        result.effective_jump,
-        result.cycle_period,
-        result.dominant_frequency,
-        result.measured_state,
-        f"{result.horizon_area:.6e}",
-        f"{result.horizon_entropy:.6e}",
-        "si" if result.qiskit_used else "no",
-        branches_text,
-    ])
+
+    writer.writerow(["Campo", "Valor"])
+    writer.writerow(["Nombre agente", result.agent.name])
+    writer.writerow(["Tiempo base", result.current_time])
+    writer.writerow(["Salto base", result.future_jump])
+    writer.writerow(["Tiempo efectivo", result.effective_time])
+    writer.writerow(["Salto efectivo", result.effective_jump])
+    writer.writerow(["Periodo detectado (QFT)", result.cycle_period])
+    writer.writerow(["Frecuencia dominante", result.dominant_frequency])
+    writer.writerow(["Interpretación temporal", result.measured_state])
+    writer.writerow(["Área horizonte", f"{result.horizon_area:.6e}"])
+    writer.writerow(["Entropía horizonte", f"{result.horizon_entropy:.6e}"])
+    writer.writerow(["Qiskit usado", "sí" if result.qiskit_used else "no"])
+    writer.writerow([])
+
+    writer.writerow(["Evento", "Probabilidad"])
+    for item in result.event_probabilities:
+        writer.writerow([item["event"], f"{item["probability"]:.6f}"])
+
+    writer.writerow([])
+    writer.writerow(["Rama futura", "Probabilidad"])
+    for branch in result.future_branches:
+        writer.writerow([branch["event"], f"{branch["probability"]:.6f}"])
+
     return output.getvalue()
 
 

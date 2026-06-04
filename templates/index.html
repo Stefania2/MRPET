@@ -99,7 +99,8 @@
           <div class="card">
             <div class="card-body">
               <h5>Descargar resultados</h5>
-              <a class="btn btn-outline-success w-100" href="{{ url_for('download_csv', name=result.agent.name, entry_time=result.agent.entry_time, mass_kg=result.agent.mass_kg, velocity_fraction_c=result.agent.velocity_fraction_c, coherence=result.agent.coherence, current_time=result.current_time, future_jump=result.future_jump) }}">Descargar CSV</a>
+              <p class="small text-muted">Descarga el CSV con los parámetros y probabilidades de esta simulación.</p>
+              <a class="btn btn-success w-100" href="{{ url_for('download_csv', name=result.agent.name, entry_time=result.agent.entry_time, mass_kg=result.agent.mass_kg, velocity_fraction_c=result.agent.velocity_fraction_c, coherence=result.agent.coherence, current_time=result.current_time, future_jump=result.future_jump) }}">Descargar CSV del experimento</a>
             </div>
           </div>
         </div>

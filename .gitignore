@@ -16,6 +16,7 @@ temp_*.py
 # Environment folders
 .venv/
 .env/
+.conda/
 
 # Local data outputs
 *.csv
