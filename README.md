@@ -36,6 +36,26 @@ Si deseas ejecutar circuitos reales con Qiskit, instala también:
 python -m pip install qiskit qiskit-aer
 ```
 
+## Despliegue como aplicación web
+
+Este proyecto ya está preparado para desplegar como app en plataformas que aceptan aplicaciones Python WSGI.
+
+- `Procfile` define el comando de arranque para `gunicorn`.
+- `requirements.txt` incluye `gunicorn`.
+- `runtime.txt` fija la versión de Python para servicios como Heroku.
+
+### Desplegar en Heroku
+
+1. Crea una app en Heroku.
+2. Conecta el repositorio GitHub `Stefania2/MRPET` o usa la CLI.
+3. Push directo al repositorio en Heroku o activa despliegue automático.
+
+### Desplegar en Render
+
+1. Crea un nuevo servicio web en Render.
+2. Conecta al repositorio `Stefania2/MRPET`.
+3. Selecciona `Python` y `Gunicorn` como comando de inicio.
+
 ## Uso
 
 - Introduce el nombre del agente, parámetros de entrada, masa, velocidad y coherencia.
