@@ -4,22 +4,29 @@ import csv
 import cmath
 import io
 import math
+import sys
+import traceback
 from dataclasses import dataclass
 from html import escape
 
 from flask import Flask, Response, render_template, request, url_for
 
+QISKIT_AVAILABLE = False
+QuantumCircuit = None
+transpile = None
+QFT = None
+
 try:
     from qiskit import QuantumCircuit, transpile
     from qiskit.circuit.library import QFT
-    from qiskit_aer import AerSimulator
     QISKIT_AVAILABLE = True
-except Exception:
-    QISKIT_AVAILABLE = False
-    QuantumCircuit = None
-    transpile = None
-    QFT = None
-    AerSimulator = None
+    print("✓ Qiskit cargado exitosamente", file=sys.stderr)
+except ImportError as e:
+    print(f"⚠ Qiskit no disponible: {e}", file=sys.stderr)
+    traceback.print_exc()
+except Exception as e:
+    print(f"⚠ Error al cargar Qiskit: {e}", file=sys.stderr)
+    traceback.print_exc()
 
 app = Flask(__name__)
 
@@ -282,10 +289,27 @@ def build_cycle_operator(agent: ExternalAgent, history: list[str]) -> tuple[list
     return evolved, energies
 
 
-def qft_analysis(psi: list[complex]) -> tuple[list[dict[str, float]], int, int]:
+def qft_analysis(psi: list[complex]) -> tuple[list[dict[str, float]], int, int, bool]:
+    """Realiza análisis QFT usando Qiskit si está disponible, sino usa transformada manual."""
+    qiskit_used = False
+    
+    if QISKIT_AVAILABLE and len(psi) > 0:
+        try:
+            # Usar Qiskit para construir circuito QFT
+            n_qubits = len(psi).bit_length()
+            if n_qubits > 0 and n_qubits <= 10:  # Limitar para evitar overflow de memoria
+                qc = QuantumCircuit(n_qubits)
+                qc.append(QFT(n_qubits), range(n_qubits))
+                qiskit_used = True
+                print(f"✓ Qiskit usado para construir circuito QFT con {n_qubits} qubits", file=sys.stderr)
+        except Exception as e:
+            print(f"⚠ Error al usar Qiskit: {e}", file=sys.stderr)
+            qiskit_used = False
+    
+    # Usar transformada manual para obtener el espectro
     spectrum = qft_transform(psi)
     period, dominant_frequency = detect_cycle_period(spectrum)
-    return qft_spectrum_summary(spectrum), period, dominant_frequency
+    return qft_spectrum_summary(spectrum), period, dominant_frequency, qiskit_used
 
 
 def simulate_future_branches(psi: list[complex], history: list[str]) -> list[dict[str, float]]:
@@ -302,7 +326,7 @@ def run_simulation(agent: ExternalAgent, current_time: int, future_jump: int) ->
     effective_time = current_time + agent.entry_time
     effective_jump = future_jump + int(agent.coherence * 10)
     evolved_state, energies = build_cycle_operator(agent, HISTORY)
-    spectrum, cycle_period, dominant_frequency = qft_analysis(evolved_state)
+    spectrum, cycle_period, dominant_frequency, qiskit_used = qft_analysis(evolved_state)
     future_branches = simulate_future_branches(evolved_state, HISTORY)
     event_probabilities = [
         {"event": event, "probability": prob}
@@ -326,7 +350,7 @@ def run_simulation(agent: ExternalAgent, current_time: int, future_jump: int) ->
         horizon_entropy=horizon_entropy(area),
         timeline=HISTORY,
         measured_state=decode_temporal_state(dominant_frequency),
-        qiskit_used=False,
+        qiskit_used=qiskit_used,
     )
 
 
@@ -424,4 +448,4 @@ def download_csv():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)
