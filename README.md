@@ -1,67 +1,151 @@
-# Simulador Web de Historias Probabilísticas
+# Simulador Temporal
 
-Este proyecto crea una aplicación web que modela la evolución de historias como estados cuánticos y aplica análisis de ciclo mediante QFT. El objetivo es explorar futuros alternativos y probabilidades de eventos en lugar de una máquina del tiempo física.
+Aplicacion web conceptual para explorar una linea temporal ciclica con un agente externo. El modelo combina:
 
-## Qué incluye
+- ciclo temporal `H[(t + k) mod N]`
+- parametros fisicos simplificados del agente: masa, velocidad y coherencia
+- energia cinetica relativista y radio gravitacional
+- entropia de horizonte `S = k_B c^3 A / (4 G hbar)`
+- probabilidades de eventos y grafico circular de la simulacion
+- linea temporal inicial y linea temporal despues del ciclo en formato binario
 
-- `app.py`: aplicación Flask para ejecutar el algoritmo desde el navegador.
-- `templates/index.html`: formulario de entrada, resultados en pantalla y descarga de CSV.
-- `requirements.txt`: dependencias necesarias.
+Esta no es una maquina del tiempo fisica. Es una simulacion matematica y visual para experimentar con ciclos, perturbaciones y restauracion simbolica.
 
-## Ejecutar localmente
+## Web app en GitHub Pages
 
-1. Instala dependencias:
+La version publica esta en la carpeta `docs/` y corre completamente en el navegador:
+
+- `docs/index.html`
+- `docs/main.js`
+- `docs/styles.css`
+
+No necesita Python, Flask ni Qiskit para funcionar en GitHub Pages.
+
+### Despliegue
+
+El workflow `.github/workflows/gh-pages.yml` publica automaticamente `docs/` en GitHub Pages cuando haces push a `main`.
+
+En GitHub, revisa:
+
+1. `Settings`
+2. `Pages`
+3. `Build and deployment`
+4. Seleccionar `GitHub Actions`
+
+Luego haz push a `main`. La action generara la URL publica del sitio.
+
+## Uso de la web
+
+Abre la pagina y ajusta:
+
+- nombre del agente
+- tiempo base `t`
+- salto base `k`
+- tiempo de entrada
+- masa en kg
+- velocidad como fraccion de `c`
+- coherencia cuantica entre `0` y `1`
+
+La app calcula:
+
+```text
+gamma = 1 / sqrt(1 - beta^2)
+energia = (gamma - 1) m c^2
+radio_grav = 2 G m / c^2
+influencia_fisica = f(energia, radio_grav, coherencia)
+t' = t + entrada
+k' = k + influencia_fisica
+restauracion_E = H[(t' + k') mod N]
+```
+
+Tambien muestra:
+
+- estados de pasado, presente, futuro y restaurado
+- grafico circular del ciclo temporal
+- linea temporal inicial y despues del ciclo
+- probabilidades de eventos
+- futuros mas probables
+- descarga CSV
+
+## Probar localmente la version estatica
+
+En Windows puedes usar:
+
+```powershell
+.\run_web_app.bat
+```
+
+Eso abre:
+
+```text
+http://127.0.0.1:8787/
+```
+
+Tambien puedes correrla manualmente:
+
+```bash
+cd docs
+python -m http.server 8000
+```
+
+Abre:
+
+```text
+http://127.0.0.1:8000/
+```
+
+## App Flask opcional
+
+El repositorio tambien conserva una app Flask:
+
+- `app.py`
+- `templates/index.html`
+- `requirements.txt`
+- `Procfile`
+
+Para correrla localmente:
 
 ```bash
 python -m pip install -r requirements.txt
-```
-
-2. Inicia la aplicación web:
-
-```bash
 python app.py
 ```
 
-3. Abre un navegador y visita:
+Luego abre:
 
-```
+```text
 http://127.0.0.1:5000/
 ```
 
-### Nota opcional
+## Archivos principales
 
-Si deseas ejecutar circuitos reales con Qiskit, instala también:
+- `dewscifrar.py`: simulacion de consola con Qiskit cuando esta disponible.
+- `docs/`: web app estatica para GitHub Pages.
+- `app.py`: web app Flask opcional.
+- `.github/workflows/gh-pages.yml`: despliegue de GitHub Pages.
+- `.github/workflows/deploy-heroku.yml`: despliegue opcional a Heroku.
 
-```bash
-python -m pip install qiskit qiskit-aer
+## Errores comunes
+
+Si corres `dewscifrar copy.py` y aparece:
+
+```text
+ModuleNotFoundError: No module named 'numpy'
 ```
 
-## Despliegue como aplicación web
+estas ejecutando un script de consola avanzado, no la web app estatica. Para la web app usa:
 
-Este proyecto ya está preparado para desplegar como app en plataformas que aceptan aplicaciones Python WSGI.
+```powershell
+.\run_web_app.bat
+```
 
-- `Procfile` define el comando de arranque para `gunicorn`.
-- `requirements.txt` incluye `gunicorn`.
-- `runtime.txt` fija la versión de Python para servicios como Heroku.
+Si de todos modos quieres ejecutar `dewscifrar copy.py`, instala sus dependencias con el mismo Python que estas usando:
 
-### Desplegar en Heroku
+```powershell
+python -m pip install -r requirements-console.txt
+```
 
-1. Crea una app en Heroku.
-2. Conecta el repositorio GitHub `Stefania2/MRPET` o usa la CLI.
-3. Push directo al repositorio en Heroku o activa despliegue automático.
+Luego ejecuta:
 
-### Desplegar en Render
-
-1. Crea un nuevo servicio web en Render.
-2. Conecta al repositorio `Stefania2/MRPET`.
-3. Selecciona `Python` y `Gunicorn` como comando de inicio.
-
-## Uso
-
-- Introduce el nombre del agente, parámetros de entrada, masa, velocidad y coherencia.
-- Ejecuta la simulación.
-- Descarga el CSV de resultados para análisis o reinterpretaciones.
-
-## Nota
-
-Si Qiskit no está disponible en el entorno, la aplicación cae a un modo determinista de respaldo, pero la interfaz seguirá funcionando y permitirá descargar CSV.
+```powershell
+python "dewscifrar copy.py"
+```

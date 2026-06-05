@@ -350,12 +350,12 @@ def simulation_to_csv(result: SimulationResult) -> str:
 
     writer.writerow(["Evento", "Probabilidad"])
     for item in result.event_probabilities:
-        writer.writerow([item["event"], f"{item["probability"]:.6f}"])
+        writer.writerow([item["event"], f"{item['probability']:.6f}"])
 
     writer.writerow([])
     writer.writerow(["Rama futura", "Probabilidad"])
     for branch in result.future_branches:
-        writer.writerow([branch["event"], f"{branch["probability"]:.6f}"])
+        writer.writerow([branch["event"], f"{branch['probability']:.6f}"])
 
     return output.getvalue()
 

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simulador Temporal</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Simulador conceptual</p>
+          <h1>Maquina del tiempo simbolica</h1>
+          <p>
+            Explora como un agente externo altera una linea temporal ciclica
+            usando masa, velocidad, coherencia, entropia y probabilidades.
+          </p>
+        </div>
+        <div class="formula-panel">
+          <span>restauracion_E = H[(t' + k') mod N]</span>
+          <span>S = k_B c^3 A / (4 G hbar)</span>
+        </div>
+      </section>
+
+      <section class="layout">
+        <form id="sim-form" class="panel controls">
+          <h2>Parametros</h2>
+          <label>
+            Nombre del agente
+            <input id="name" value="viajero" autocomplete="off" />
+          </label>
+          <label>
+            Tiempo base t
+            <input id="current_time" type="number" value="11" />
+          </label>
+          <label>
+            Salto base k
+            <input id="future_jump" type="number" value="5" />
+          </label>
+          <label>
+            Tiempo de entrada
+            <input id="entry_time" type="number" value="2" />
+          </label>
+          <label>
+            Masa del agente en kg
+            <input id="mass_kg" type="number" min="0" step="0.1" value="70" />
+          </label>
+          <label>
+            Velocidad como fraccion de c
+            <input id="velocity_fraction_c" type="number" min="0" max="0.999999" step="0.000001" value="0.05" />
+          </label>
+          <label>
+            Coherencia cuantica
+            <input id="coherence" type="number" min="0" max="1" step="0.01" value="0.8" />
+          </label>
+          <button type="submit">Ejecutar simulacion</button>
+        </form>
+
+        <section id="result-section" class="results hidden">
+          <div class="panel">
+            <h2>Resumen</h2>
+            <div id="summary-grid" class="summary-grid"></div>
+          </div>
+
+          <div class="panel">
+            <h2>Ciclo temporal</h2>
+            <svg id="cycle-svg" viewBox="0 0 620 520" role="img" aria-label="Grafico circular del ciclo temporal"></svg>
+          </div>
+
+          <div class="panel">
+            <h2>Estados</h2>
+            <ul id="state-list" class="state-list"></ul>
+          </div>
+
+          <div id="binary-timeline" class="binary-grid"></div>
+
+          <div class="panel">
+            <h2>Probabilidades</h2>
+            <ul id="probability-list" class="probability-list"></ul>
+          </div>
+
+          <div class="panel">
+            <h2>Futuros mas probables</h2>
+            <ul id="branch-list" class="branch-list"></ul>
+            <button id="download-csv" type="button" class="secondary-button">Descargar CSV</button>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script src="main.js"></script>
+  </body>
+</html>
