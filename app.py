@@ -21,12 +21,12 @@ try:
     from qiskit import QuantumCircuit, transpile
     from qiskit.circuit.library import QFT
     QISKIT_AVAILABLE = True
-    print("✓ Qiskit cargado exitosamente", file=sys.stderr)
+    print("Qiskit cargado exitosamente", file=sys.stderr)
 except ImportError as e:
-    print(f"⚠ Qiskit no disponible: {e}", file=sys.stderr)
+    print(f"Qiskit no disponible: {e}", file=sys.stderr)
     traceback.print_exc()
 except Exception as e:
-    print(f"⚠ Error al cargar Qiskit: {e}", file=sys.stderr)
+    print(f"Error al cargar Qiskit: {e}", file=sys.stderr)
     traceback.print_exc()
 
 app = Flask(__name__)
@@ -55,20 +55,20 @@ PLANCK_ENERGY = 1.9561e9
 TEMPORAL_CODES = {
     0: "estado estable",
     1: "eco del pasado",
-    2: "recuerdo restaurado",
-    3: "bifurcacion temporal",
+    2: "recuerdo recurrente",
+    3: "bifurcacion logica",
     4: "linea alternativa",
-    5: "salto cronologico",
+    5: "salto de indice",
     6: "paradoja estable",
     7: "convergencia de ciclos",
     8: "memoria persistente",
     9: "evento repetido",
-    10: "interferencia temporal",
-    11: "reconstruccion historica",
+    10: "interferencia de fase",
+    11: "reconstruccion simbolica",
     12: "rama secundaria",
-    13: "horizonte temporal",
-    14: "sincronizacion cuantica",
-    15: "restauracion completa",
+    13: "frontera de informacion",
+    14: "sincronizacion de fases",
+    15: "recurrencia completa",
 }
 
 
@@ -94,8 +94,11 @@ class SimulationResult:
     event_probabilities: list[dict[str, float]]
     future_branches: list[dict[str, float]]
     qft_spectrum: list[dict[str, float]]
-    horizon_area: float
-    horizon_entropy: float
+    information_area: float
+    information_entropy: float
+    probability_entropy: float
+    state_distance: float
+    spectral_concentration: float
     timeline: list[str]
     measured_state: str
     qiskit_used: bool
@@ -125,12 +128,12 @@ def planck_area() -> float:
     return GRAVITATIONAL_CONSTANT * REDUCED_PLANCK_CONSTANT / LIGHT_SPEED**3
 
 
-def horizon_area_from_restoration(restored_index: int) -> float:
-    memory_units = restored_index + 1
+def information_area_from_memory(memory_index: int) -> float:
+    memory_units = memory_index + 1
     return 4 * memory_units * planck_area()
 
 
-def horizon_entropy(area: float) -> float:
+def information_entropy(area: float) -> float:
     numerator = BOLTZMANN_CONSTANT * LIGHT_SPEED**3 * area
     denominator = 4 * GRAVITATIONAL_CONSTANT * REDUCED_PLANCK_CONSTANT
     return numerator / denominator
@@ -223,6 +226,22 @@ def probabilities_from_state(psi: list[complex]) -> list[float]:
     return [value / total for value in raw]
 
 
+def shannon_entropy(probabilities: list[float]) -> float:
+    return -sum(prob * math.log2(prob) for prob in probabilities if prob > 0)
+
+
+def state_distance(before: list[complex], after: list[complex]) -> float:
+    return math.sqrt(sum(abs(after_amp - before_amp) ** 2 for before_amp, after_amp in zip(before, after)))
+
+
+def spectral_concentration(spectrum: list[complex]) -> float:
+    magnitudes = [abs(amplitude) ** 2 for amplitude in spectrum]
+    total = sum(magnitudes)
+    if total == 0:
+        return 0.0
+    return max(magnitudes) / total
+
+
 def top_future_branches(probabilities: list[float], history: list[str], count: int = 3) -> list[dict[str, float]]:
     indexed = sorted(
         enumerate(probabilities),
@@ -283,28 +302,28 @@ def perturbation_angles(agent: ExternalAgent, bit_count: int) -> list[float]:
     return angles
 
 
-def build_cycle_operator(agent: ExternalAgent, history: list[str]) -> tuple[list[complex], list[float]]:
+def build_cycle_operator(agent: ExternalAgent, history: list[str]) -> tuple[list[complex], list[complex], list[float]]:
     psi0 = event_state_vector(history, agent)
     energies = event_energies(agent)
     evolved = phase_evolution(psi0, energies, agent)
-    return evolved, energies
+    return psi0, evolved, energies
 
 
 def qft_analysis(psi: list[complex]) -> tuple[list[dict[str, float]], int, int, bool]:
-    """Realiza análisis QFT usando Qiskit si está disponible, sino usa transformada manual."""
+    """Realiza analisis QFT usando Qiskit si esta disponible, si no usa transformada manual."""
     qiskit_used = False
     
     if QISKIT_AVAILABLE and len(psi) > 0:
         try:
             # Usar Qiskit para construir circuito QFT
-            n_qubits = len(psi).bit_length()
-            if n_qubits > 0 and n_qubits <= 10:  # Limitar para evitar overflow de memoria
+            n_qubits = int(math.log2(len(psi)))
+            if 2**n_qubits == len(psi) and n_qubits > 0 and n_qubits <= 10:
                 qc = QuantumCircuit(n_qubits)
                 qc.append(QFT(n_qubits), range(n_qubits))
                 qiskit_used = True
-                print(f"✓ Qiskit usado para construir circuito QFT con {n_qubits} qubits", file=sys.stderr)
+                print(f"Qiskit usado para construir circuito QFT con {n_qubits} qubits", file=sys.stderr)
         except Exception as e:
-            print(f"⚠ Error al usar Qiskit: {e}", file=sys.stderr)
+            print(f"Error al usar Qiskit: {e}", file=sys.stderr)
             qiskit_used = False
     
     # Usar transformada manual para obtener el espectro
@@ -318,7 +337,7 @@ def simulate_future_branches(psi: list[complex], history: list[str]) -> list[dic
     return top_future_branches(probabilities, history)
 
 
-def decode_temporal_state(value: int) -> str:
+def decode_logical_state(value: int) -> str:
     return TEMPORAL_CODES.get(value % 16, "estado desconocido")
 
 
@@ -326,15 +345,15 @@ def run_simulation(agent: ExternalAgent, current_time: int, future_jump: int) ->
     cycle_size = len(HISTORY)
     effective_time = current_time + agent.entry_time
     effective_jump = future_jump + int(agent.coherence * 10)
-    evolved_state, energies = build_cycle_operator(agent, HISTORY)
+    initial_state, evolved_state, energies = build_cycle_operator(agent, HISTORY)
     spectrum, cycle_period, dominant_frequency, qiskit_used = qft_analysis(evolved_state)
     future_branches = simulate_future_branches(evolved_state, HISTORY)
+    probabilities = probabilities_from_state(evolved_state)
     event_probabilities = [
         {"event": event, "probability": prob}
-        for event, prob in zip(HISTORY, probabilities_from_state(evolved_state))
+        for event, prob in zip(HISTORY, probabilities)
     ]
-    memory_units = cycle_period + 1
-    area = horizon_area_from_restoration(cycle_period)
+    area = information_area_from_memory(cycle_period)
     return SimulationResult(
         agent=agent,
         current_time=current_time,
@@ -347,10 +366,13 @@ def run_simulation(agent: ExternalAgent, current_time: int, future_jump: int) ->
         event_probabilities=event_probabilities,
         future_branches=future_branches,
         qft_spectrum=spectrum,
-        horizon_area=area,
-        horizon_entropy=horizon_entropy(area),
+        information_area=area,
+        information_entropy=information_entropy(area),
+        probability_entropy=shannon_entropy(probabilities),
+        state_distance=state_distance(initial_state, evolved_state),
+        spectral_concentration=spectral_concentration([complex(item["magnitude"], 0) for item in spectrum]),
         timeline=HISTORY,
-        measured_state=decode_temporal_state(dominant_frequency),
+        measured_state=decode_logical_state(dominant_frequency),
         qiskit_used=qiskit_used,
     )
 
@@ -363,14 +385,17 @@ def simulation_to_csv(result: SimulationResult) -> str:
     writer.writerow(["Nombre agente", result.agent.name])
     writer.writerow(["Tiempo base", result.current_time])
     writer.writerow(["Salto base", result.future_jump])
-    writer.writerow(["Tiempo efectivo", result.effective_time])
-    writer.writerow(["Salto efectivo", result.effective_jump])
+    writer.writerow(["Indice logico efectivo", result.effective_time])
+    writer.writerow(["Desplazamiento logico efectivo", result.effective_jump])
     writer.writerow(["Periodo detectado (QFT)", result.cycle_period])
     writer.writerow(["Frecuencia dominante", result.dominant_frequency])
-    writer.writerow(["Interpretación temporal", result.measured_state])
-    writer.writerow(["Área horizonte", f"{result.horizon_area:.6e}"])
-    writer.writerow(["Entropía horizonte", f"{result.horizon_entropy:.6e}"])
-    writer.writerow(["Qiskit usado", "sí" if result.qiskit_used else "no"])
+    writer.writerow(["Interpretacion logica", result.measured_state])
+    writer.writerow(["Area analogica de informacion", f"{result.information_area:.6e}"])
+    writer.writerow(["Entropia analogica de informacion", f"{result.information_entropy:.6e}"])
+    writer.writerow(["Entropia de probabilidad", f"{result.probability_entropy:.6f}"])
+    writer.writerow(["Distancia entre estados", f"{result.state_distance:.6f}"])
+    writer.writerow(["Concentracion espectral", f"{result.spectral_concentration:.6f}"])
+    writer.writerow(["Qiskit usado", "si" if result.qiskit_used else "no"])
     writer.writerow([])
 
     writer.writerow(["Evento", "Probabilidad"])
@@ -378,7 +403,7 @@ def simulation_to_csv(result: SimulationResult) -> str:
         writer.writerow([item["event"], f"{item['probability']:.6f}"])
 
     writer.writerow([])
-    writer.writerow(["Rama futura", "Probabilidad"])
+    writer.writerow(["Rama logica dominante", "Probabilidad"])
     for branch in result.future_branches:
         writer.writerow([branch["event"], f"{branch['probability']:.6f}"])
 

@@ -10,17 +10,23 @@
     <main class="app-shell">
       <section class="hero">
         <div>
-          <p class="eyebrow">Simulador conceptual</p>
-          <h1>Maquina del tiempo simbolica</h1>
+          <p class="eyebrow">Modelo computacional conceptual</p>
+          <h1>Laboratorio de estados discretos</h1>
           <p>
-            Explora como un agente externo altera una linea temporal ciclica
-            usando masa, velocidad, coherencia, entropia y probabilidades.
+            Explora una historia como vector de amplitudes, evolucion de fase,
+            recurrencia espectral y bifurcacion probabilistica en tiempo logico.
           </p>
         </div>
         <div class="formula-panel">
-          <span>restauracion_E = H[(t' + k') mod N]</span>
-          <span>S = k_B c^3 A / (4 G hbar)</span>
+          <span>|psi_t&gt; = sum_i alpha_i |H_i&gt;</span>
+          <span>|psi_t+1&gt; = U(theta) |psi_t&gt;</span>
+          <span>P(H_i) = |alpha_i|^2</span>
         </div>
+      </section>
+
+      <section class="notice">
+        Este prototipo no modela viajes en el tiempo fisicos. Usa estados simbolicos,
+        parametros analogicos y metricas computacionales para estudiar recurrencia y memoria.
       </section>
 
       <section class="layout">
@@ -31,30 +37,30 @@
             <input id="name" value="viajero" autocomplete="off" />
           </label>
           <label>
-            Tiempo base t
+            Indice logico base t
             <input id="current_time" type="number" value="11" />
           </label>
           <label>
-            Salto base k
+            Desplazamiento base k
             <input id="future_jump" type="number" value="5" />
           </label>
           <label>
-            Tiempo de entrada
+            Entrada logica
             <input id="entry_time" type="number" value="2" />
           </label>
           <label>
-            Masa del agente en kg
+            Masa analogica en kg
             <input id="mass_kg" type="number" min="0" step="0.1" value="70" />
           </label>
           <label>
-            Velocidad como fraccion de c
+            Velocidad analogica como fraccion de c
             <input id="velocity_fraction_c" type="number" min="0" max="0.999999" step="0.000001" value="0.05" />
           </label>
           <label>
-            Coherencia cuantica
+            Coherencia de fase
             <input id="coherence" type="number" min="0" max="1" step="0.01" value="0.8" />
           </label>
-          <button type="submit">Ejecutar simulacion</button>
+          <button type="submit">Ejecutar modelo</button>
         </form>
 
         <section id="result-section" class="results hidden">
@@ -64,8 +70,8 @@
           </div>
 
           <div class="panel">
-            <h2>Ciclo temporal</h2>
-            <svg id="cycle-svg" viewBox="0 0 620 520" role="img" aria-label="Grafico circular del ciclo temporal"></svg>
+            <h2>Ciclo logico</h2>
+            <svg id="cycle-svg" viewBox="0 0 620 520" role="img" aria-label="Grafico circular del ciclo logico"></svg>
           </div>
 
           <div class="panel">
@@ -81,7 +87,7 @@
           </div>
 
           <div class="panel">
-            <h2>Futuros mas probables</h2>
+            <h2>Ramas logicas dominantes</h2>
             <ul id="branch-list" class="branch-list"></ul>
             <button id="download-csv" type="button" class="secondary-button">Descargar CSV</button>
           </div>

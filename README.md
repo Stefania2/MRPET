@@ -1,15 +1,50 @@
-# Simulador Temporal
+# Laboratorio de Estados Discretos
 
-Aplicacion web conceptual para explorar una linea temporal ciclica con un agente externo. El modelo combina:
+Aplicacion web conceptual para estudiar historias como sistemas discretos de estados.
+El proyecto ya no se plantea como una maquina del tiempo fisica, sino como un modelo
+computacional inspirado en amplitudes complejas, evolucion de fase y analisis espectral.
 
-- ciclo temporal `H[(t + k) mod N]`
-- parametros fisicos simplificados del agente: masa, velocidad y coherencia
-- energia cinetica relativista y radio gravitacional
-- entropia de horizonte `S = k_B c^3 A / (4 G hbar)`
-- probabilidades de eventos y grafico circular de la simulacion
-- linea temporal inicial y linea temporal despues del ciclo en formato binario
+## Enfoque investigable
 
-Esta no es una maquina del tiempo fisica. Es una simulacion matematica y visual para experimentar con ciclos, perturbaciones y restauracion simbolica.
+El objetivo defendible es:
+
+```text
+Modelo computacional de memoria ciclica y bifurcacion probabilistica usando estados
+discretos, fases complejas y analisis espectral inspirado en QFT.
+```
+
+El modelo combina:
+
+- estados base `|H_i>` para representar eventos simbolicos
+- tiempo logico `t`, desplazamiento `k` y ciclo `H[(t + k) mod N]`
+- amplitudes complejas `alpha_i` normalizadas
+- evolucion de fase mediante un operador analogico `U(theta)`
+- probabilidades `P(H_i) = |alpha_i|^2`
+- analisis QFT/manual para detectar recurrencias y frecuencia dominante
+- metricas medibles: entropia de probabilidad, distancia entre estados y concentracion espectral
+
+Las variables como masa, velocidad y coherencia se tratan como parametros analogicos de
+perturbacion. No validan afirmaciones fisicas sobre relatividad, horizontes reales ni viajes
+temporales.
+
+## Hipotesis de trabajo
+
+Una historia discreta puede representarse como:
+
+```text
+|psi_t> = sum_i alpha_i(t) |H_i>
+|psi_t+1> = U(theta) |psi_t>
+P(H_i) = |alpha_i|^2
+F(k) = QFT(|psi_t+1>)
+```
+
+El prototipo permite observar:
+
+- que ramas logicas concentran mayor probabilidad
+- cuanto cambia el estado despues de aplicar fases
+- que tan concentrado esta el espectro dominante
+- cuanta incertidumbre tiene la distribucion de eventos
+- si hay recurrencias detectables bajo perturbaciones controladas
 
 ## Web app en GitHub Pages
 
@@ -39,35 +74,35 @@ Luego haz push a `main`. La action generara la URL publica del sitio.
 Abre la pagina y ajusta:
 
 - nombre del agente
-- tiempo base `t`
-- salto base `k`
-- tiempo de entrada
-- masa en kg
-- velocidad como fraccion de `c`
-- coherencia cuantica entre `0` y `1`
+- indice logico base `t`
+- desplazamiento base `k`
+- entrada logica del agente
+- masa analogica
+- velocidad analogica como fraccion de `c`
+- coherencia de fase entre `0` y `1`
 
 La app calcula:
 
 ```text
-gamma = 1 / sqrt(1 - beta^2)
-energia = (gamma - 1) m c^2
-radio_grav = 2 G m / c^2
-influencia_fisica = f(energia, radio_grav, coherencia)
+perturbacion = f(masa, velocidad, coherencia, entrada)
 t' = t + entrada
-k' = k + influencia_fisica
-restauracion_E = H[(t' + k') mod N]
+k' = k + perturbacion
+indice_recurrente = H[(t' + k') mod N]
+entropia_P = -sum(P_i log2 P_i)
+distancia_estado = ||psi_evolucionado - psi_inicial||
+concentracion_espectral = max(|F_k|^2) / sum(|F_k|^2)
 ```
 
 Tambien muestra:
 
-- estados de pasado, presente, futuro y restaurado
-- grafico circular del ciclo temporal
-- linea temporal inicial y despues del ciclo
+- estados logicos de pasado, presente, proyeccion y recurrencia
+- grafico circular del ciclo logico
+- registro binario antes y despues del ciclo
 - probabilidades de eventos
-- futuros mas probables
+- ramas logicas dominantes
 - descarga CSV
 
-## Probar localmente la version estatica
+## Probar localmente
 
 En Windows puedes usar:
 
@@ -81,7 +116,7 @@ Eso abre:
 http://127.0.0.1:5000/
 ```
 
-Tambien puedes correrla manualmente:
+Tambien puedes correr la version estatica manualmente:
 
 ```bash
 cd docs
@@ -96,7 +131,7 @@ http://127.0.0.1:8000/
 
 ## App Flask opcional
 
-El repositorio tambien conserva una app Flask:
+El repositorio conserva una app Flask:
 
 - `app.py`
 - `templates/index.html`
@@ -118,11 +153,18 @@ http://127.0.0.1:5000/
 
 ## Archivos principales
 
-- `dewscifrar.py`: simulacion de consola con Qiskit cuando esta disponible.
 - `docs/`: web app estatica para GitHub Pages.
-- `app.py`: web app Flask opcional.
+- `app.py`: web app Flask opcional con metricas exportables.
+- `templates/index.html`: interfaz Flask.
+- `dewscifrar.py`: simulacion de consola con Qiskit cuando esta disponible.
 - `.github/workflows/gh-pages.yml`: despliegue de GitHub Pages.
 - `.github/workflows/deploy-heroku.yml`: despliegue opcional a Heroku.
+
+## Limites cientificos
+
+Este proyecto no demuestra viaje temporal ni prediccion fisica de futuros. Su valor esta en
+formalizar una intuicion como sistema discreto medible: estados, operadores, distribuciones,
+recurrencias y sensibilidad a perturbaciones.
 
 ## Errores comunes
 
@@ -132,13 +174,13 @@ Si corres `dewscifrar copy.py` y aparece:
 ModuleNotFoundError: No module named 'numpy'
 ```
 
-estas ejecutando un script de consola avanzado, no la web app estatica. Para la web app usa:
+estas ejecutando un script de consola avanzado, no la web app. Para la web app usa:
 
 ```powershell
 .\run_web_app.bat
 ```
 
-Si de todos modos quieres ejecutar `dewscifrar copy.py`, instala sus dependencias con el mismo Python que estas usando:
+Si de todos modos quieres ejecutar `dewscifrar copy.py`, instala sus dependencias con el mismo Python:
 
 ```powershell
 python -m pip install -r requirements-console.txt

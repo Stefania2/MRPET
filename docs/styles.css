@@ -94,6 +94,16 @@ h3 {
   font-size: 14px;
 }
 
+.notice {
+  margin: 0 0 20px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  line-height: 1.5;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);

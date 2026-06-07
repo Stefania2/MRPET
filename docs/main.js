@@ -12,10 +12,10 @@ const HISTORY = [
 const TEMPORAL_CODES = [
   "estado estable",
   "eco del pasado",
-  "recuerdo restaurado",
-  "bifurcacion temporal",
+  "recuerdo recurrente",
+  "bifurcacion logica",
   "linea alternativa",
-  "salto cronologico",
+  "salto de indice",
   "paradoja estable",
   "convergencia de ciclos",
 ];
@@ -173,6 +173,25 @@ function probabilitiesFromState(psi) {
   return raw.map((value) => (total === 0 ? 1 / raw.length : value / total));
 }
 
+function shannonEntropy(probabilities) {
+  return -probabilities
+    .filter((probability) => probability > 0)
+    .reduce((sum, probability) => sum + probability * Math.log2(probability), 0);
+}
+
+function stateDistance(before, after) {
+  return Math.sqrt(after.reduce((sum, amplitude, index) => {
+    const delta = complex(amplitude.re - before[index].re, amplitude.im - before[index].im);
+    return sum + complexAbs(delta) ** 2;
+  }, 0));
+}
+
+function spectralConcentration(spectrum) {
+  const powers = spectrum.map((amplitude) => complexAbs(amplitude) ** 2);
+  const total = powers.reduce((sum, value) => sum + value, 0);
+  return total === 0 ? 0 : Math.max(...powers) / total;
+}
+
 function detectCyclePeriod(spectrum) {
   const magnitudes = spectrum.map((amplitude) => complexAbs(amplitude));
   const dominantFrequency = magnitudes.reduce(
@@ -238,6 +257,9 @@ function runSimulation(agent, currentTime, futureJump) {
     gravitationalRadius: gravitationalRadius(agent),
     horizonArea: area,
     horizonEntropy: horizonEntropy(area),
+    probabilityEntropy: shannonEntropy(probabilities),
+    stateDistance: stateDistance(psi, evolved),
+    spectralConcentration: spectralConcentration(spectrum),
     memoryUnits: restoredIndex + 1,
     timeline,
     timelineRegister,
@@ -280,16 +302,16 @@ function stateLine(label, value) {
 function renderTimelineRegister(register) {
   document.getElementById("binary-timeline").innerHTML = `
     <div class="timeline-block">
-      <h3>Linea temporal inicial</h3>
+      <h3>Registro logico inicial</h3>
       ${stateLine("pasado", register.initial.past)}
       ${stateLine("presente", register.initial.present)}
-      ${stateLine("futuro", register.initial.future)}
+      ${stateLine("proyeccion", register.initial.future)}
     </div>
     <div class="timeline-block">
-      <h3>Linea temporal despues del ciclo</h3>
+      <h3>Registro logico despues del ciclo</h3>
       ${stateLine("pasado", register.cycled.past)}
       ${stateLine("presente", register.cycled.present)}
-      ${stateLine("futuro", register.cycled.future)}
+      ${stateLine("proyeccion", register.cycled.future)}
     </div>
   `;
 }
@@ -297,21 +319,21 @@ function renderTimelineRegister(register) {
 function renderResult(result) {
   document.getElementById("result-section").classList.remove("hidden");
   document.getElementById("summary-grid").innerHTML = `
-    <article><span>Influencia fisica</span><strong>${result.physicalInfluence}</strong></article>
+    <article><span>Perturbacion analogica</span><strong>${result.physicalInfluence}</strong></article>
     <article><span>t'</span><strong>${result.effectiveTime}</strong></article>
     <article><span>k'</span><strong>${result.effectiveJump}</strong></article>
-    <article><span>Restaurado</span><strong>H[${result.restoredIndex}]</strong></article>
-    <article><span>Energia cinetica</span><strong>${result.kineticEnergy.toExponential(3)} J</strong></article>
-    <article><span>Radio gravitacional</span><strong>${result.gravitationalRadius.toExponential(3)} m</strong></article>
-    <article><span>Entropia</span><strong>${result.horizonEntropy.toExponential(3)} J/K</strong></article>
+    <article><span>Indice recurrente</span><strong>H[${result.restoredIndex}]</strong></article>
+    <article><span>Entropia P</span><strong>${result.probabilityEntropy.toFixed(4)} bits</strong></article>
+    <article><span>Distancia estado</span><strong>${result.stateDistance.toFixed(4)}</strong></article>
+    <article><span>Concentracion espectral</span><strong>${result.spectralConcentration.toFixed(4)}</strong></article>
     <article><span>Estado QFT</span><strong>${result.measuredState}</strong></article>
   `;
 
   document.getElementById("state-list").innerHTML = `
     <li><span>pasado</span><strong>H[${result.pastIndex}] = ${result.timeline[result.pastIndex]}</strong></li>
     <li><span>presente</span><strong>H[${result.presentIndex}] = ${result.timeline[result.presentIndex]}</strong></li>
-    <li><span>futuro</span><strong>H[${result.futureIndex}] = ${result.timeline[result.futureIndex]}</strong></li>
-    <li><span>restaurado</span><strong>H[${result.restoredIndex}] = ${result.timeline[result.restoredIndex]}</strong></li>
+    <li><span>proyeccion</span><strong>H[${result.futureIndex}] = ${result.timeline[result.futureIndex]}</strong></li>
+    <li><span>recurrencia</span><strong>H[${result.restoredIndex}] = ${result.timeline[result.restoredIndex]}</strong></li>
   `;
 
   renderTimelineRegister(result.timelineRegister);
@@ -350,8 +372,8 @@ function nodeRole(index, result) {
   const roles = [];
   if (index === result.pastIndex) roles.push("pasado");
   if (index === result.presentIndex) roles.push("presente");
-  if (index === result.futureIndex) roles.push("futuro");
-  if (index === result.restoredIndex) roles.push("restaurado");
+  if (index === result.futureIndex) roles.push("proyeccion");
+  if (index === result.restoredIndex) roles.push("recurrencia");
   return roles.join(", ") || "evento";
 }
 
@@ -404,10 +426,10 @@ function createCSV(result) {
     ["Salto base", result.futureJump],
     ["Tiempo efectivo", result.effectiveTime],
     ["Salto efectivo", result.effectiveJump],
-    ["Influencia fisica", result.physicalInfluence],
-    ["Energia cinetica", result.kineticEnergy],
-    ["Radio gravitacional", result.gravitationalRadius],
-    ["Entropia", result.horizonEntropy],
+    ["Perturbacion analogica", result.physicalInfluence],
+    ["Entropia de probabilidad", result.probabilityEntropy],
+    ["Distancia entre estados", result.stateDistance],
+    ["Concentracion espectral", result.spectralConcentration],
     [],
     ["Evento", "Probabilidad"],
     ...result.eventProbabilities.map((item) => [item.event, item.probability.toFixed(6)]),
@@ -419,7 +441,7 @@ function downloadCSV(result) {
   const blob = new Blob([createCSV(result)], { type: "text/csv;charset=utf-8" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "simulacion_temporal.csv";
+  link.download = "modelo_estados_discretos.csv";
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

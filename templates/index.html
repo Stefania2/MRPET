@@ -3,14 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Simulador de Historias Probabilísticas</title>
+    <title>Laboratorio de Estados Discretos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body class="bg-light">
     <div class="container py-5">
       <div class="mb-4 text-center">
-        <h1>Simulador de Historias Probabilísticas</h1>
-        <p class="text-muted">Explora eventos como estados cuánticos, detecta ciclos con QFT y descarga resultados en CSV.</p>
+        <p class="text-uppercase fw-bold text-primary mb-2">Modelo computacional conceptual</p>
+        <h1>Laboratorio de Estados Discretos</h1>
+        <p class="text-muted">
+          Explora una historia como vector de amplitudes, aplica evolucion de fase,
+          detecta recurrencias con analisis espectral inspirado en QFT y exporta metricas medibles.
+        </p>
+      </div>
+
+      <div class="alert alert-info" role="alert">
+        Este prototipo no modela viajes en el tiempo fisicos. Usa tiempo logico, estados simbolicos y
+        parametros de perturbacion para estudiar recurrencia, memoria y bifurcacion probabilistica.
       </div>
 
       <div class="card mb-4">
@@ -21,31 +30,31 @@
               <input name="name" class="form-control" value="{{ agent.name }}" />
             </div>
             <div class="col-md-6">
-              <label class="form-label">Tiempo base (t)</label>
+              <label class="form-label">Indice logico base (t)</label>
               <input name="current_time" type="number" class="form-control" value="{{ current_time }}" />
             </div>
             <div class="col-md-6">
-              <label class="form-label">Salto base (k)</label>
+              <label class="form-label">Desplazamiento base (k)</label>
               <input name="future_jump" type="number" class="form-control" value="{{ future_jump }}" />
             </div>
             <div class="col-md-6">
-              <label class="form-label">Entrada del agente</label>
+              <label class="form-label">Entrada logica del agente</label>
               <input name="entry_time" type="number" class="form-control" value="{{ agent.entry_time }}" />
             </div>
             <div class="col-md-3">
-              <label class="form-label">Masa (kg)</label>
+              <label class="form-label">Masa analogica (kg)</label>
               <input name="mass_kg" type="number" step="0.1" class="form-control" value="{{ agent.mass_kg }}" />
             </div>
             <div class="col-md-3">
-              <label class="form-label">Velocidad (fracción de c)</label>
+              <label class="form-label">Velocidad analogica (fraccion de c)</label>
               <input name="velocity_fraction_c" type="number" step="0.000001" class="form-control" value="{{ agent.velocity_fraction_c }}" min="0" max="0.999999" />
             </div>
             <div class="col-md-3">
-              <label class="form-label">Coherencia</label>
+              <label class="form-label">Coherencia de fase</label>
               <input name="coherence" type="number" step="0.01" class="form-control" value="{{ agent.coherence }}" min="0" max="1" />
             </div>
             <div class="col-md-3 d-flex align-items-end">
-              <button type="submit" class="btn btn-primary w-100">Ejecutar simulación</button>
+              <button type="submit" class="btn btn-primary w-100">Ejecutar modelo</button>
             </div>
           </form>
         </div>
@@ -56,17 +65,19 @@
         <div class="col-lg-8">
           <div class="card mb-4">
             <div class="card-body">
-              <h4>Resultados</h4>
+              <h4>Metricas del modelo</h4>
               <dl class="row mb-0">
-                <dt class="col-sm-5">Tamaño del ciclo</dt><dd class="col-sm-7">{{ result.cycle_size }}</dd>
-                <dt class="col-sm-5">Tiempo efectivo</dt><dd class="col-sm-7">{{ result.effective_time }}</dd>
-                <dt class="col-sm-5">Salto efectivo</dt><dd class="col-sm-7">{{ result.effective_jump }}</dd>
+                <dt class="col-sm-5">Tamano del ciclo</dt><dd class="col-sm-7">{{ result.cycle_size }}</dd>
+                <dt class="col-sm-5">Indice logico efectivo</dt><dd class="col-sm-7">{{ result.effective_time }}</dd>
+                <dt class="col-sm-5">Desplazamiento efectivo</dt><dd class="col-sm-7">{{ result.effective_jump }}</dd>
                 <dt class="col-sm-5">Periodo detectado (QFT)</dt><dd class="col-sm-7">{{ result.cycle_period }}</dd>
                 <dt class="col-sm-5">Frecuencia dominante</dt><dd class="col-sm-7">{{ result.dominant_frequency }}</dd>
-                <dt class="col-sm-5">Interpretación temporal</dt><dd class="col-sm-7">{{ result.measured_state }}</dd>
-                <dt class="col-sm-5">Área del horizonte</dt><dd class="col-sm-7">{{ "{:.6e}".format(result.horizon_area) }} m²</dd>
-                <dt class="col-sm-5">Entropía</dt><dd class="col-sm-7">{{ "{:.6e}".format(result.horizon_entropy) }} J/K</dd>
-                <dt class="col-sm-5">Qiskit usado</dt><dd class="col-sm-7">{{ 'sí' if result.qiskit_used else 'no' }}</dd>
+                <dt class="col-sm-5">Interpretacion logica</dt><dd class="col-sm-7">{{ result.measured_state }}</dd>
+                <dt class="col-sm-5">Entropia de probabilidad</dt><dd class="col-sm-7">{{ "{:.6f}".format(result.probability_entropy) }} bits</dd>
+                <dt class="col-sm-5">Distancia entre estados</dt><dd class="col-sm-7">{{ "{:.6f}".format(result.state_distance) }}</dd>
+                <dt class="col-sm-5">Concentracion espectral</dt><dd class="col-sm-7">{{ "{:.6f}".format(result.spectral_concentration) }}</dd>
+                <dt class="col-sm-5">Entropia analogica de informacion</dt><dd class="col-sm-7">{{ "{:.6e}".format(result.information_entropy) }} J/K</dd>
+                <dt class="col-sm-5">Qiskit usado</dt><dd class="col-sm-7">{{ 'si' if result.qiskit_used else 'no' }}</dd>
               </dl>
             </div>
           </div>
@@ -75,7 +86,7 @@
               <h5>Probabilidades de evento</h5>
               <ul class="mb-0">
                 {% for item in result.event_probabilities %}
-                  <li>{{ item.event }} → {{ (item.probability * 100)|round(2) }}%</li>
+                  <li>{{ item.event }} -> {{ (item.probability * 100)|round(2) }}%</li>
                 {% endfor %}
               </ul>
             </div>
@@ -84,15 +95,15 @@
         <div class="col-lg-4">
           <div class="card mb-4">
             <div class="card-body">
-              <h5>Futuros más probables</h5>
+              <h5>Ramas logicas dominantes</h5>
               {% if result.future_branches %}
                 <ul class="mb-0">
                   {% for branch in result.future_branches %}
-                    <li>{{ branch.event }} → {{ (branch.probability * 100)|round(2) }}%</li>
+                    <li>{{ branch.event }} -> {{ (branch.probability * 100)|round(2) }}%</li>
                   {% endfor %}
                 </ul>
               {% else %}
-                <p class="mb-0">No hay ramas dominantes en esta medición.</p>
+                <p class="mb-0">No hay ramas dominantes en esta medicion.</p>
               {% endif %}
             </div>
           </div>
@@ -103,12 +114,12 @@
       <div class="card mb-4">
         <div class="card-body">
           <h5>Descargar resultados</h5>
-          <p class="small text-muted">Descarga el CSV de esta simulación o los datos adicionales disponibles en el repositorio.</p>
+          <p class="small text-muted">Descarga el CSV de esta simulacion o los datos adicionales disponibles en el repositorio.</p>
           <div class="d-grid gap-2">
             {% if result %}
-              <a class="btn btn-success" href="{{ url_for('download_csv', name=result.agent.name, entry_time=result.agent.entry_time, mass_kg=result.agent.mass_kg, velocity_fraction_c=result.agent.velocity_fraction_c, coherence=result.agent.coherence, current_time=result.current_time, future_jump=result.future_jump) }}">Descargar CSV del experimento</a>
+              <a class="btn btn-success" href="{{ url_for('download_csv', name=result.agent.name, entry_time=result.agent.entry_time, mass_kg=result.agent.mass_kg, velocity_fraction_c=result.agent.velocity_fraction_c, coherence=result.agent.coherence, current_time=result.current_time, future_jump=result.future_jump) }}">Descargar CSV del modelo</a>
             {% else %}
-              <button class="btn btn-secondary" disabled>Ejecuta una simulación para descargar el CSV del experimento</button>
+              <button class="btn btn-secondary" disabled>Ejecuta el modelo para descargar el CSV</button>
             {% endif %}
             <a class="btn btn-outline-primary" href="{{ url_for('download_static_csv', file='probability_surface.csv') }}">Descargar probability_surface.csv</a>
             <a class="btn btn-outline-primary" href="{{ url_for('download_static_csv', file='velocity_state_table.csv') }}">Descargar velocity_state_table.csv</a>
@@ -120,9 +131,9 @@
 
       <div class="card mt-4">
         <div class="card-body">
-          <h5>Notas</h5>
-          <p>La aplicación modela la evolución de una historia probabilística usando amplitudes de eventos y análisis de ciclo mediante QFT.</p>
-          <p>Los parámetros del agente afectan la fase y la mezcla entre eventos, generando futuros alternativos con probabilidades interpretables.</p>
+          <h5>Notas de investigacion</h5>
+          <p>El estado se representa como |psi_t&gt; = sum_i alpha_i |H_i&gt; y evoluciona mediante fases complejas.</p>
+          <p>Las variables fisicas son parametros analogicos de perturbacion; las conclusiones validas son computacionales, no experimentales.</p>
         </div>
       </div>
     </div>
