@@ -78,7 +78,7 @@ En Windows puedes usar:
 Eso abre:
 
 ```text
-http://127.0.0.1:8787/
+http://127.0.0.1:5000/
 ```
 
 Tambien puedes correrla manualmente:

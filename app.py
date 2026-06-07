@@ -4,12 +4,13 @@ import csv
 import cmath
 import io
 import math
+import os
 import sys
 import traceback
 from dataclasses import dataclass
 from html import escape
 
-from flask import Flask, Response, render_template, request, url_for
+from flask import Flask, Response, render_template, request, send_from_directory, url_for
 
 QISKIT_AVAILABLE = False
 QuantumCircuit = None
@@ -447,5 +448,28 @@ def download_csv():
     return response
 
 
+ALLOWED_CSV_FILES = {
+    "probability_surface.csv",
+    "velocity_state_table.csv",
+    "critical_region_probability.csv",
+    "critical_region_refined.csv",
+}
+
+
+@app.route("/download_static")
+def download_static_csv():
+    file_name = request.args.get("file", "")
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+    if file_name not in ALLOWED_CSV_FILES:
+        return Response("Archivo CSV no permitido.", status=404)
+    return send_from_directory(
+        base_dir,
+        file_name,
+        as_attachment=True,
+    )
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    host = os.environ.get("HOST", "127.0.0.1")
+    port = int(os.environ.get("PORT", "5000"))
+    app.run(host=host, port=port, debug=False)

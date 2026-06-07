@@ -26,12 +26,12 @@
 
   <circle cx="490" cy="310" r="210" fill="none"
           stroke="#cbd5e1" stroke-width="4" stroke-dasharray="8 10" />
-  <path d="M 638.49 458.49 L 280.00 310.00"
+  <path d="M 638.49 458.49 L 490.00 520.00"
         stroke="#111827" stroke-width="3" fill="none" marker-end="url(#arrow)" />
   <circle cx="638.49" cy="458.49" r="35" fill="none"
           stroke="#ef4444" stroke-width="4" />
   <text x="638.49" y="416.49" text-anchor="middle"
-        class="small">entrada: 09</text>
+        class="small">entrada: 0</text>
 
   
             <g>
@@ -75,11 +75,11 @@
             </g>
             
             <g>
-              <circle cx="490.00" cy="520.00" r="25" fill="#64748b" />
+              <circle cx="490.00" cy="520.00" r="25" fill="#d946ef" />
               <text x="490.00" y="525.00" text-anchor="middle"
                     class="node-label">H[4]</text>
               <text x="490.00" y="564.00" text-anchor="middle"
-                    class="small">evento</text>
+                    class="small">futuro, restaurado</text>
               <text x="490.00" y="584.00" text-anchor="middle"
                     class="tiny">el fruto guardo memoria</text>
             </g>
@@ -95,11 +95,11 @@
             </g>
             
             <g>
-              <circle cx="280.00" cy="310.00" r="25" fill="#d946ef" />
+              <circle cx="280.00" cy="310.00" r="25" fill="#64748b" />
               <text x="280.00" y="315.00" text-anchor="middle"
                     class="node-label">H[6]</text>
               <text x="280.00" y="354.00" text-anchor="middle"
-                    class="small">futuro, restaurado</text>
+                    class="small">evento</text>
               <text x="280.00" y="374.00" text-anchor="middle"
                     class="tiny">la tierra recordo el ciclo</text>
             </g>
@@ -118,10 +118,10 @@
   <rect x="40" y="560" width="900" height="150" rx="8" fill="#ffffff"
         stroke="#e2e8f0" />
   <text x="64" y="596" class="formula">
-    restauracion_E = H[(t' + k') mod N] = H[(11 + 11) mod 8]
+    restauracion_E = H[(t' + k') mod N] = H[(11 + 9) mod 8]
   </text>
   <text x="64" y="626" class="body">
-    indice restaurado: 6 | influencia fisica: 6 | memoria m: 7
+    indice restaurado: 4 | influencia fisica: 4 | memoria m: 7
   </text>
   <text x="64" y="656" class="formula">
     S = k_B c^3 A / (4 G hbar), A = 4 m l_p^2
@@ -134,9 +134,9 @@
   <g class="branch-tree">
     <text x="640" y="628" class="small">Presente</text>
 <text x="652" y="648" class="small">│</text>
-<text x="648" y="668" class="small">├── Rama 011 (22.66%)</text>
-<text x="648" y="690" class="small">├── Rama 111 (21.29%)</text>
-<text x="648" y="712" class="small">├── Rama 100 (18.75%)</text>
-<text x="648" y="734" class="small">└── Rama 000 (18.07%)</text>
+<text x="648" y="668" class="small">├── Rama 011 (34.38%)</text>
+<text x="648" y="690" class="small">├── Rama 111 (22.85%)</text>
+<text x="648" y="712" class="small">├── Rama 101 (15.82%)</text>
+<text x="648" y="734" class="small">└── Rama 001 (15.04%)</text>
   </g>
 </svg>

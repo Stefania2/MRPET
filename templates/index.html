@@ -96,16 +96,27 @@
               {% endif %}
             </div>
           </div>
-          <div class="card">
-            <div class="card-body">
-              <h5>Descargar resultados</h5>
-              <p class="small text-muted">Descarga el CSV con los parámetros y probabilidades de esta simulación.</p>
-              <a class="btn btn-success w-100" href="{{ url_for('download_csv', name=result.agent.name, entry_time=result.agent.entry_time, mass_kg=result.agent.mass_kg, velocity_fraction_c=result.agent.velocity_fraction_c, coherence=result.agent.coherence, current_time=result.current_time, future_jump=result.future_jump) }}">Descargar CSV del experimento</a>
-            </div>
-          </div>
         </div>
       </div>
       {% endif %}
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5>Descargar resultados</h5>
+          <p class="small text-muted">Descarga el CSV de esta simulación o los datos adicionales disponibles en el repositorio.</p>
+          <div class="d-grid gap-2">
+            {% if result %}
+              <a class="btn btn-success" href="{{ url_for('download_csv', name=result.agent.name, entry_time=result.agent.entry_time, mass_kg=result.agent.mass_kg, velocity_fraction_c=result.agent.velocity_fraction_c, coherence=result.agent.coherence, current_time=result.current_time, future_jump=result.future_jump) }}">Descargar CSV del experimento</a>
+            {% else %}
+              <button class="btn btn-secondary" disabled>Ejecuta una simulación para descargar el CSV del experimento</button>
+            {% endif %}
+            <a class="btn btn-outline-primary" href="{{ url_for('download_static_csv', file='probability_surface.csv') }}">Descargar probability_surface.csv</a>
+            <a class="btn btn-outline-primary" href="{{ url_for('download_static_csv', file='velocity_state_table.csv') }}">Descargar velocity_state_table.csv</a>
+            <a class="btn btn-outline-primary" href="{{ url_for('download_static_csv', file='critical_region_probability.csv') }}">Descargar critical_region_probability.csv</a>
+            <a class="btn btn-outline-primary" href="{{ url_for('download_static_csv', file='critical_region_refined.csv') }}">Descargar critical_region_refined.csv</a>
+          </div>
+        </div>
+      </div>
 
       <div class="card mt-4">
         <div class="card-body">
