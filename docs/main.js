@@ -398,7 +398,7 @@ function renderCycle(result) {
     const shortEvent = event.split("|")[0].trim();
     return `
       <g>
-        <circle cx="${point.x}" cy="${point.y}" r="25" fill="${nodeColor(index, result)}"></circle>
+        <circle cx="${point.x}" cy="${point.y}" r="25" fill="${nodeColor(index, result)}" filter="url(#node-shadow)"></circle>
         <text x="${point.x}" y="${point.y + 5}" text-anchor="middle" class="node-index">H[${index}]</text>
         <text x="${point.x}" y="${point.y + 43}" text-anchor="middle" class="node-role">${nodeRole(index, result)}</text>
         <text x="${point.x}" y="${point.y + 61}" text-anchor="middle" class="node-event">${shortEvent.slice(0, 24)}</text>
@@ -408,10 +408,16 @@ function renderCycle(result) {
 
   svg.innerHTML = `
     <defs>
+      <filter id="node-shadow" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="0" dy="9" stdDeviation="7" flood-color="#143a8b" flood-opacity="0.18"></feDropShadow>
+      </filter>
       <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
         <path d="M2,2 L10,6 L2,10 Z" fill="#111827"></path>
       </marker>
     </defs>
+    <circle cx="${centerX}" cy="${centerY}" r="102" fill="#f8fbff" stroke="#e2e8f0" stroke-width="2"></circle>
+    <text x="${centerX}" y="${centerY - 10}" text-anchor="middle" class="node-role">periodo QFT</text>
+    <text x="${centerX}" y="${centerY + 18}" text-anchor="middle" class="cycle-period">${result.period}</text>
     <circle cx="${centerX}" cy="${centerY}" r="${radius}" fill="none" stroke="#cbd5e1" stroke-width="4" stroke-dasharray="8 10"></circle>
     <path d="M ${entry.x} ${entry.y} L ${restored.x} ${restored.y}" stroke="#111827" stroke-width="3" marker-end="url(#arrow)"></path>
     ${nodes}

@@ -3,24 +3,45 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Simulador Temporal</title>
+    <title>Laboratorio de Estados Discretos</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app-shell">
       <section class="hero">
-        <div>
+        <div class="hero-copy">
           <p class="eyebrow">Modelo computacional conceptual</p>
           <h1>Laboratorio de estados discretos</h1>
           <p>
             Explora una historia como vector de amplitudes, evolucion de fase,
             recurrencia espectral y bifurcacion probabilistica en tiempo logico.
           </p>
+          <div class="hero-actions" aria-label="Resumen de capacidades">
+            <span>Simulacion en navegador</span>
+            <span>Metricas exportables</span>
+            <span>GitHub Pages</span>
+          </div>
         </div>
-        <div class="formula-panel">
-          <span>|psi_t&gt; = sum_i alpha_i |H_i&gt;</span>
-          <span>|psi_t+1&gt; = U(theta) |psi_t&gt;</span>
-          <span>P(H_i) = |alpha_i|^2</span>
+        <div class="hero-panel">
+          <div class="formula-panel" aria-label="Hipotesis del modelo">
+            <span>|psi_t&gt; = sum_i alpha_i |H_i&gt;</span>
+            <span>|psi_t+1&gt; = U(theta) |psi_t&gt;</span>
+            <span>P(H_i) = |alpha_i|^2</span>
+          </div>
+          <div class="signal-strip">
+            <article>
+              <span>Estados</span>
+              <strong>8</strong>
+            </article>
+            <article>
+              <span>Registro</span>
+              <strong>6 bit</strong>
+            </article>
+            <article>
+              <span>Salida</span>
+              <strong>CSV</strong>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -31,7 +52,10 @@
 
       <section class="layout">
         <form id="sim-form" class="panel controls">
-          <h2>Parametros</h2>
+          <div class="panel-heading">
+            <h2>Parametros</h2>
+            <span>Entrada del modelo</span>
+          </div>
           <label>
             Nombre del agente
             <input id="name" value="viajero" autocomplete="off" />
@@ -60,36 +84,57 @@
             Coherencia de fase
             <input id="coherence" type="number" min="0" max="1" step="0.01" value="0.8" />
           </label>
-          <button type="submit">Ejecutar modelo</button>
+          <button type="submit" class="primary-button">
+            <span aria-hidden="true">></span>
+            Ejecutar modelo
+          </button>
         </form>
 
         <section id="result-section" class="results hidden">
           <div class="panel">
-            <h2>Resumen</h2>
+            <div class="panel-heading">
+              <h2>Resumen</h2>
+              <span>Lectura instantanea</span>
+            </div>
             <div id="summary-grid" class="summary-grid"></div>
           </div>
 
           <div class="panel">
-            <h2>Ciclo logico</h2>
+            <div class="panel-heading">
+              <h2>Ciclo logico</h2>
+              <span>Pasado, presente, proyeccion y recurrencia</span>
+            </div>
             <svg id="cycle-svg" viewBox="0 0 620 520" role="img" aria-label="Grafico circular del ciclo logico"></svg>
           </div>
 
           <div class="panel">
-            <h2>Estados</h2>
+            <div class="panel-heading">
+              <h2>Estados</h2>
+              <span>Eventos activos</span>
+            </div>
             <ul id="state-list" class="state-list"></ul>
           </div>
 
           <div id="binary-timeline" class="binary-grid"></div>
 
           <div class="panel">
-            <h2>Probabilidades</h2>
+            <div class="panel-heading">
+              <h2>Probabilidades</h2>
+              <span>Distribucion normalizada</span>
+            </div>
             <ul id="probability-list" class="probability-list"></ul>
           </div>
 
           <div class="panel">
-            <h2>Ramas logicas dominantes</h2>
+            <div class="panel-heading">
+              <h2>Ramas logicas dominantes</h2>
+              <span>Top 3 escenarios</span>
+            </div>
             <ul id="branch-list" class="branch-list"></ul>
-            <button id="download-csv" type="button" class="secondary-button">Descargar CSV</button>
+            <button id="download-csv" type="button" class="secondary-button">
+              <span aria-hidden="true">v</span>
+              Descargar CSV
+            </button>
           </div>
         </section>
       </section>

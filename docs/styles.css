@@ -1,14 +1,17 @@
 :root {
   color-scheme: light;
-  --bg: #f6f8fb;
+  --bg: #f4f7fb;
   --panel: #ffffff;
   --ink: #172033;
   --muted: #607089;
   --line: #dbe3ee;
-  --blue: #2563eb;
-  --green: #16a34a;
-  --magenta: #c026d3;
-  --orange: #ea580c;
+  --blue: #1f5eff;
+  --blue-dark: #143a8b;
+  --green: #0f9f6e;
+  --magenta: #b923c9;
+  --orange: #db6b21;
+  --cyan: #0891b2;
+  --shadow: 0 18px 50px rgba(20, 58, 139, 0.11);
 }
 
 * {
@@ -17,7 +20,7 @@
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: linear-gradient(180deg, #fbfdff 0%, var(--bg) 46%, #eef3f9 100%);
   color: var(--ink);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -25,15 +28,20 @@ body {
 .app-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 28px 0 48px;
+  padding: 24px 0 56px;
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 430px);
   gap: 24px;
-  align-items: end;
-  padding: 28px 0 22px;
+  align-items: center;
+  min-height: 360px;
+  padding: 24px 0 22px;
+}
+
+.hero-copy {
+  max-width: 780px;
 }
 
 .eyebrow {
@@ -54,8 +62,9 @@ p {
 
 h1 {
   margin-bottom: 12px;
-  font-size: clamp(34px, 7vw, 64px);
-  line-height: 0.95;
+  max-width: 760px;
+  font-size: clamp(40px, 7vw, 76px);
+  line-height: 0.92;
   letter-spacing: 0;
 }
 
@@ -73,8 +82,25 @@ h3 {
   max-width: 720px;
   margin-bottom: 0;
   color: var(--muted);
-  font-size: 18px;
+  font-size: 19px;
   line-height: 1.55;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.hero-actions span {
+  border: 1px solid rgba(31, 94, 255, 0.22);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--blue-dark);
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .formula-panel,
@@ -85,22 +111,61 @@ h3 {
   background: var(--panel);
 }
 
+.hero-panel {
+  display: grid;
+  gap: 12px;
+}
+
 .formula-panel {
   display: grid;
   gap: 10px;
-  padding: 18px;
+  padding: 20px;
   color: #334155;
   font-family: Consolas, "Liberation Mono", monospace;
-  font-size: 14px;
+  font-size: 15px;
+  box-shadow: var(--shadow);
+}
+
+.formula-panel span {
+  border-left: 3px solid var(--cyan);
+  padding-left: 10px;
+}
+
+.signal-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.signal-strip article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.signal-strip span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.signal-strip strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 22px;
 }
 
 .notice {
-  margin: 0 0 20px;
+  margin: 0 0 22px;
   border: 1px solid #bfdbfe;
   border-radius: 8px;
-  padding: 14px 16px;
-  background: #eff6ff;
-  color: #1e3a8a;
+  padding: 14px 18px;
+  background: rgba(239, 246, 255, 0.86);
+  color: var(--blue-dark);
+  font-weight: 650;
   line-height: 1.5;
 }
 
@@ -112,8 +177,8 @@ h3 {
 }
 
 .panel {
-  padding: 18px;
-  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
+  padding: 20px;
+  box-shadow: var(--shadow);
 }
 
 .controls {
@@ -121,6 +186,26 @@ h3 {
   top: 16px;
   display: grid;
   gap: 14px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.panel-heading h2 {
+  margin-bottom: 0;
+}
+
+.panel-heading span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: right;
+  text-transform: uppercase;
 }
 
 label {
@@ -133,11 +218,18 @@ label {
 
 input {
   width: 100%;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #c9d5e6;
   border-radius: 6px;
   padding: 10px 11px;
   color: var(--ink);
   font: inherit;
+  background: #fbfdff;
+}
+
+input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(31, 94, 255, 0.14);
+  outline: 0;
 }
 
 button {
@@ -149,6 +241,29 @@ button {
   font: inherit;
   font-weight: 800;
   cursor: pointer;
+}
+
+.primary-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.primary-button span,
+.secondary-button span {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  font-family: Consolas, "Liberation Mono", monospace;
+}
+
+button:hover {
+  filter: brightness(0.96);
 }
 
 .secondary-button {
@@ -172,11 +287,11 @@ button {
 }
 
 .summary-grid article {
-  min-height: 82px;
-  border: 1px solid #e2e8f0;
+  min-height: 92px;
+  border: 1px solid #dfe7f2;
   border-radius: 8px;
-  padding: 12px;
-  background: #f8fafc;
+  padding: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
 }
 
 .summary-grid span,
@@ -193,7 +308,7 @@ button {
   display: block;
   margin-top: 8px;
   overflow-wrap: anywhere;
-  font-size: 17px;
+  font-size: 18px;
 }
 
 #cycle-svg {
@@ -217,6 +332,12 @@ button {
   font-size: 10px;
 }
 
+.cycle-period {
+  fill: var(--ink);
+  font-size: 34px;
+  font-weight: 900;
+}
+
 .state-list,
 .probability-list,
 .branch-list {
@@ -231,8 +352,10 @@ button {
   display: grid;
   grid-template-columns: 120px minmax(0, 1fr);
   gap: 14px;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  background: #fbfdff;
 }
 
 .state-list strong {
@@ -247,6 +370,7 @@ button {
 
 .timeline-block {
   padding: 18px;
+  box-shadow: var(--shadow);
 }
 
 .timeline-block div {
@@ -275,12 +399,16 @@ button {
 meter {
   width: 100%;
   height: 12px;
+  accent-color: var(--blue);
 }
 
 .branch-list li {
+  border: 1px solid #f0d5f6;
   border-left: 4px solid var(--magenta);
-  padding: 8px 10px;
-  background: #faf5ff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: linear-gradient(90deg, #faf5ff 0%, #ffffff 100%);
+  font-weight: 700;
 }
 
 @media (max-width: 920px) {
@@ -297,6 +425,15 @@ meter {
   .summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .panel-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .panel-heading span {
+    text-align: left;
+  }
 }
 
 @media (max-width: 560px) {
@@ -305,6 +442,14 @@ meter {
   }
 
   .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 38px;
+  }
+
+  .signal-strip {
     grid-template-columns: 1fr;
   }
 
