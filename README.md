@@ -4,6 +4,10 @@ Aplicacion web conceptual para estudiar historias como sistemas discretos de est
 El proyecto ya no se plantea como una maquina del tiempo fisica, sino como un modelo
 computacional inspirado en amplitudes complejas, evolucion de fase y analisis espectral.
 
+[Revisa la página web del funcionamiento de la aplicación basado en Qiskit, es un código
+abierto creado por IBM para programar y experimentar con computadoras cuánticas]
+(https://stefania2.github.io/MRPET/) 
+
 ## Enfoque investigable
 
 El objetivo defendible es:
